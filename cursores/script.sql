@@ -1,3 +1,36 @@
+SELECT * FROM tb_youtubers;
+
+DO $$
+  DECLARE
+    v_ano INT := 2010;
+    v_inscritos INT := 60000000;
+    --1. Declaração do cursor
+    cur_ano_inscritos CURSOR (ano INT, inscritos INT) FOR 
+    SELECT youtuber FROM tb_youtubers WHERE started >= ano AND subscribers >= inscritos;
+    v_youtuber VARCHAR(200);
+  BEGIN
+    --2. Abertura do cursor
+    --essa, passando argumentos pela ordem
+    --OPEN cur_ano_inscritos(v_ano, v_inscritos);
+    --ou essa, passando argumentos pelo nome, invertendo a ordem
+    --OPEN cur_ano_inscritos(inscritos := v_inscritos, ano := v_ano);
+    --ou essa, passando argumentos pelo nome, mantendo a ordem
+    OPEN cur_ano_inscritos (ano := v_ano, inscritos := v_inscritos);
+    LOOP
+      -- buscar o nome
+      --3. Recuperação
+      FETCH cur_ano_inscritos INTO v_youtuber;
+      --sair, se for o caso
+      EXIT WHEN NOT FOUND; 
+      --exibir, se puder
+      RAISE NOTICE '%', v_youtuber;
+    END LOOP;
+    --4. Fechamento
+    CLOSE cur_ano_inscritos;
+  END;
+$$
+
+
 --cursor vinculado (bound)
 --exibir nome de canal concatenado a seu numero de inscritos
 -- mais um bloquinho anônimo
