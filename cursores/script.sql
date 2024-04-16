@@ -1,34 +1,67 @@
-SELECT * FROM tb_youtubers;
-
+-- Active: 1712671096678@@127.0.0.1@5432@20241_fatec_ipi_pbdi_cursores
 DO $$
-  DECLARE
-    v_ano INT := 2010;
-    v_inscritos INT := 60000000;
-    --1. Declaração do cursor
-    cur_ano_inscritos CURSOR (ano INT, inscritos INT) FOR 
-    SELECT youtuber FROM tb_youtubers WHERE started >= ano AND subscribers >= inscritos;
-    v_youtuber VARCHAR(200);
-  BEGIN
-    --2. Abertura do cursor
-    --essa, passando argumentos pela ordem
-    --OPEN cur_ano_inscritos(v_ano, v_inscritos);
-    --ou essa, passando argumentos pelo nome, invertendo a ordem
-    --OPEN cur_ano_inscritos(inscritos := v_inscritos, ano := v_ano);
-    --ou essa, passando argumentos pelo nome, mantendo a ordem
-    OPEN cur_ano_inscritos (ano := v_ano, inscritos := v_inscritos);
-    LOOP
-      -- buscar o nome
-      --3. Recuperação
-      FETCH cur_ano_inscritos INTO v_youtuber;
-      --sair, se for o caso
-      EXIT WHEN NOT FOUND; 
-      --exibir, se puder
-      RAISE NOTICE '%', v_youtuber;
-    END LOOP;
-    --4. Fechamento
-    CLOSE cur_ano_inscritos;
-  END;
+DECLARE
+  --1. cursor não vinculado
+  cur_delete REFCURSOR;
+  tupla RECORD;
+BEGIN
+  --2. Abrir o cursor
+  OPEN cur_delete SCROLL FOR
+    SELECT * FROM tb_youtubers;
+  LOOP
+    -- pego a proxima linha
+    FETCH cur_delete INTO tupla;
+    --saio, se for o caso
+    EXIT WHEN NOT FOUND;
+    --olho para video_count da tupla
+    IF tupla.video_count IS NULL THEN
+    --se for null, faço delete
+    DELETE FROM tb_youtubers WHERE CURRENT OF cur_delete;
+    END IF;
+  END LOOP;
+  --fazer o loop de baixo para cima, pesquisando na internet
+  --não vale olhar o bloquinho de codigo 2.9.1 da apoostila 16
+  LOOP
+    FETCH BACKWARD FROM cur_delete INTO tupla;
+    EXIT WHEN NOT FOUND;
+    RAISE NOTICE '%', tupla;
+  END LOOP;
+  --4. Fechamento do cursor
+  CLOSE cur_delete;
+END;
 $$
+
+-- SELECT * FROM tb_youtubers;
+
+-- DO $$
+--   DECLARE
+--     v_ano INT := 2010;
+--     v_inscritos INT := 60000000;
+--     --1. Declaração do cursor
+--     cur_ano_inscritos CURSOR (ano INT, inscritos INT) FOR 
+--     SELECT youtuber FROM tb_youtubers WHERE started >= ano AND subscribers >= inscritos;
+--     v_youtuber VARCHAR(200);
+--   BEGIN
+--     --2. Abertura do cursor
+--     --essa, passando argumentos pela ordem
+--     --OPEN cur_ano_inscritos(v_ano, v_inscritos);
+--     --ou essa, passando argumentos pelo nome, invertendo a ordem
+--     --OPEN cur_ano_inscritos(inscritos := v_inscritos, ano := v_ano);
+--     --ou essa, passando argumentos pelo nome, mantendo a ordem
+--     OPEN cur_ano_inscritos (ano := v_ano, inscritos := v_inscritos);
+--     LOOP
+--       -- buscar o nome
+--       --3. Recuperação
+--       FETCH cur_ano_inscritos INTO v_youtuber;
+--       --sair, se for o caso
+--       EXIT WHEN NOT FOUND; 
+--       --exibir, se puder
+--       RAISE NOTICE '%', v_youtuber;
+--     END LOOP;
+--     --4. Fechamento
+--     CLOSE cur_ano_inscritos;
+--   END;
+-- $$
 
 
 --cursor vinculado (bound)
