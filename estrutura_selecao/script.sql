@@ -1,30 +1,52 @@
 -- Active: 1714478873185@@127.0.0.1@5432@20241_fatec_ipi_pbdi_selecao@public
-
--- IF/ELSIF/ELSE
-DO $$ DECLARE 
-	a INT := fn_gera_valor_aleatorio_entre (0, 20);
-	b INT := fn_gera_valor_aleatorio_entre (0, 20);
-	c INT := fn_gera_valor_aleatorio_entre (0, 20);
-	delta NUMERIC(10, 2);
-	raizUm NUMERIC(10, 2);
-	raizDois NUMERIC(10, 2);
+DO $$
+DECLARE
+  valor INT := fn_gera_valor_aleatorio_entre(1, 12);
+  mensagem VARCHAR(200);
 BEGIN
-	RAISE NOTICE '%x% + %x + % = 0', a, U&'\00B2', b, c;
-	IF a = 0 THEN RAISE NOTICE 'Não vai rolar, não é de segundo grau';
-	ELSE delta := (b ^ 2) - (4 * a * c);
-	IF delta > 0 THEN raizUm := (b * -1 + |/ delta) / (2 * a);
-	raizDois := (b * -1 - |/ delta) / (2 * a);
-	RAISE NOTICE 'Duas raizes: % e %', raizUm, raizDois;
-	ELSEIF delta = 0 THEN raizUm := (b * -1 + |/ delta) / (2 * a);
-	RAISE NOTICE 'Uma raiz: %', raizUm;
-	ELSE RAISE NOTICE 'Sem raiz';
-END
-	IF;
-END
-	IF;
+  RAISE NOTICE 'Valor gerado: %', valor;
+  CASE valor
+    WHEN 1, 3, 5, 7, 9 THEN
+      mensagem := 'Ímpar';
+    WHEN 2, 4, 8, 10 THEN
+      mensagem := 'Par';
+    ELSE
+      mensagem := 'Fora do intervalo';
+  END CASE;
+  RAISE NOTICE 'O valor é %', mensagem;
 END;
 $$
-	--IF/ELSE: Verificar a paridade de um número
+
+
+
+
+
+
+-- IF/ELSIF/ELSE
+-- DO $$ DECLARE 
+-- 	a INT := fn_gera_valor_aleatorio_entre (0, 20);
+-- 	b INT := fn_gera_valor_aleatorio_entre (0, 20);
+-- 	c INT := fn_gera_valor_aleatorio_entre (0, 20);
+-- 	delta NUMERIC(10, 2);
+-- 	raizUm NUMERIC(10, 2);
+-- 	raizDois NUMERIC(10, 2);
+-- BEGIN
+-- 	RAISE NOTICE '%x% + %x + % = 0', a, U&'\00B2', b, c;
+-- 	IF a = 0 THEN RAISE NOTICE 'Não vai rolar, não é de segundo grau';
+-- 	ELSE delta := (b ^ 2) - (4 * a * c);
+-- 	IF delta > 0 THEN raizUm := (b * -1 + |/ delta) / (2 * a);
+-- 	raizDois := (b * -1 - |/ delta) / (2 * a);
+-- 	RAISE NOTICE 'Duas raizes: % e %', raizUm, raizDois;
+-- 	ELSEIF delta = 0 THEN raizUm := (b * -1 + |/ delta) / (2 * a);
+-- 	RAISE NOTICE 'Uma raiz: %', raizUm;
+-- 	ELSE RAISE NOTICE 'Sem raiz';
+-- END
+-- 	IF;
+-- END
+-- 	IF;
+-- END;
+-- $$
+-- 	--IF/ELSE: Verificar a paridade de um número
 	-- DO $$
 	--   DECLARE
 	--     valor INT := fn_gera_valor_aleatorio_entre(1, 100);
