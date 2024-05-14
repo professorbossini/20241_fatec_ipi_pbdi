@@ -1,23 +1,58 @@
---calculando a média com FOR
+--FOREACH com SLICE
 DO $$
 DECLARE
-  aluno RECORD;
-  media NUMERIC(10, 2) := 0;
-  total INT;
+  vetor INT[] := ARRAY[1, 2, 3];
+  matriz INT[] := ARRAY[
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+  ];
+  var_aux INT;
+  vet_aux INT[];
 BEGIN
-  FOR aluno IN
-    SELECT * FROM tb_aluno
-  LOOP
-    --mostrar a nota do aluno atual
-    RAISE NOTICE '%', aluno.nota;
-    --acumular a media em 2 segundos
-    media := media + aluno.nota;
+  FOREACH vet_aux SLICE 3 IN ARRAY matriz LOOP
+    RAISE NOTICE '%', vet_aux;
   END LOOP;
-  -- guardar a quantidade de linhas na variável total
-  SELECT COUNT(*) FROM tb_aluno INTO total;
-  RAISE NOTICE 'Media: %', media / total;
 END;
 $$
+
+--FOREACH
+-- DO $$
+-- DECLARE
+--   valores INT[] := ARRAY[
+--     1, 10, 5, 4, 3, 2, 1, 6, 5  
+--   ];
+--   valor INT;
+--   soma INT := 0;
+-- BEGIN
+  
+--   FOREACH valor IN ARRAY valores LOOP
+--     RAISE NOTICE 'Valor da vez: %', valor;
+--     soma := soma + valor;
+--   END LOOP;
+--   RAISE NOTICE 'Soma: %', soma;
+-- END;
+-- $$
+-- --calculando a média com FOR
+-- DO $$
+-- DECLARE
+--   aluno RECORD;
+--   media NUMERIC(10, 2) := 0;
+--   total INT;
+-- BEGIN
+--   FOR aluno IN
+--     SELECT * FROM tb_aluno
+--   LOOP
+--     --mostrar a nota do aluno atual
+--     RAISE NOTICE '%', aluno.nota;
+--     --acumular a media em 2 segundos
+--     media := media + aluno.nota;
+--   END LOOP;
+--   -- guardar a quantidade de linhas na variável total
+--   SELECT COUNT(*) FROM tb_aluno INTO total;
+--   RAISE NOTICE 'Media: %', media / total;
+-- END;
+-- $$
 
 -- DO $$
 -- BEGIN
