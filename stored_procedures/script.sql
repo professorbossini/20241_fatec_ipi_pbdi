@@ -1,30 +1,62 @@
 -- Active: 1715685873518@@localhost@5432@20241_fatec_ipi_pbdi_stored_procedures
 
-CREATE OR REPLACE PROCEDURE sp_obter_notas_para_compor_o_troco(
-  OUT p_resultado VARCHAR(500),
-  IN p_troco INT
-) LANGUAGE plpgsql
-AS $$
+DO $$
 DECLARE
-  v_notas200 INT := 0;
-  v_notas100 INT := 0;
-  v_notas50 INT := 0;
-  v_notas20 INT := 0;
-  v_notas10 INT := 0;
-  v_notas5 INT := 0;
-  v_notas2 INT := 0;
-  v_moedas1 INT := 0;
+  v_resultado VARCHAR(500);
+  v_troco INT := 43;
 BEGIN
-  v_notas200 := p_troco / 200;
-  v_notas100 := p_troco % 200 / 100;
-  v_notas50 := p_troco % 200 % 100 / 50;
-  v_notas20 := p_troco % 200 % 100 % 50 / 20;
-  v_notas10 := p_troco % 200 % 100 % 50 % 20 / 10;
-  v_notas5 := p_troco % 200 % 100 % 50 % 20 % 10 / 5;
-  v_notas2 := p_troco % 200 % 100 % 50 % 20 % 10 % 5 / 2;
-  v_moedas1 := p_troco % 200 % 100 % 50 % 20 % 10 % 5 % 2 / 1;
+  CALL sp_obter_notas_para_compor_o_troco(v_resultado, v_troco);
+  RAISE NOTICE '%', v_resultado;
 END;
 $$
+
+
+-- CREATE OR REPLACE PROCEDURE sp_obter_notas_para_compor_o_troco(
+--   OUT p_resultado VARCHAR(500),
+--   IN p_troco INT
+-- ) LANGUAGE plpgsql
+-- AS $$
+-- DECLARE
+--   v_notas200 INT := 0;
+--   v_notas100 INT := 0;
+--   v_notas50 INT := 0;
+--   v_notas20 INT := 0;
+--   v_notas10 INT := 0;
+--   v_notas5 INT := 0;
+--   v_notas2 INT := 0;
+--   v_moedas1 INT := 0;
+-- BEGIN
+--   v_notas200 := p_troco / 200;
+--   v_notas100 := p_troco % 200 / 100;
+--   v_notas50 := p_troco % 200 % 100 / 50;
+--   v_notas20 := p_troco % 200 % 100 % 50 / 20;
+--   v_notas10 := p_troco % 200 % 100 % 50 % 20 / 10;
+--   v_notas5 := p_troco % 200 % 100 % 50 % 20 % 10 / 5;
+--   v_notas2 := p_troco % 200 % 100 % 50 % 20 % 10 % 5 / 2;
+--   v_moedas1 := p_troco % 200 % 100 % 50 % 20 % 10 % 5 % 2 / 1;
+
+--   p_resultado := CONCAT(
+--     'Notas de 200: ',
+--     v_notas200 || E'\n',
+--     'Notas de 100: ',
+--     v_notas100 || E'\n',
+--     'Notas de 50: ',
+--     v_notas50 || E'\n',
+--     'Notas de 20: ',
+--     v_notas20 || E'\n',
+--     'Notas de 10: ',
+--     v_notas10 || E'\n'
+--     'Notas de 5: ',
+--     v_notas5 || E'\n',
+--     'Notas de 2: ',
+--     v_notas2 || E'\n',
+--     'Moedas de 1: ',
+--     v_moedas1
+--   );
+-- END;
+-- $$
+
+
 -- DO $$
 -- DECLARE
 --   v_troco INT;
